@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>画廊</title>
+    <style type="text/css">
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        body{
+            background-color: #fff;
+            color: #555;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
+        .wrap{
+            width:100%;
+            height:600px;
+            position: absolute;
+            top:50%;
+            margin-top: -300px;
+            background-color: #333;
+            overflow: hidden;
+            perspective: 800px;
+        }
+        /*海报样式*/
+        .photo{
+            width: 260px;
+            height: 320px;
+            position: absolute;
+            z-index: 1;
+            box-shadow: 0 0 1px rgba(0,0,0,.01);
+        }
+        .photo .side{
+            width: 100%;
+            height: 100%;
+            background-color: #eee;
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            /*为了不使20的padding撑大100%的box，而改变盒模型的边框判定*/
+            backface-visibility: hidden;
+            /*CHOME浏览器默认值为hidden，Firefox则不是*/
+        }
+        .photo .side-front .image{
+            width: 100%;
+            height: 250px;
+            line-height: 250px;
+            overflow: hidden;
+        }
+        .photo .side-front .image img{
+            width: 100%;
+
+        }
+        .photo .side-front .caption{
+            text-align: center;
+            font-size: 16px;
+            line-height: 50px;
+        }
+        .photo .side-back .desc{
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5em;
+        }
+        /* 当前选中海报样式*/
+        .photo_center{
+            left: 50%;
+            top: 50%;
+            margin: -160px 0 0 -130px;
+            z-index: 999;
+        }
+        /* 负责翻转 */
+        .photo_wrap{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: all .6s;
+        }
+        .photo_wrap .side-front{
+             transform: rotateY(0deg);
+         }
+        .photo_wrap .side-back{
+            transform: rotateY(180deg);
+        }
+        .photo_front .photo_wrap{
+            transform: rotateY(0deg);
+        }
+        .photo_back .photo_wrap{
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body onselectstart="return false;">
+<div class="wrap" id="wrap">
+    <!-- .photo负责平移翻转-->
+    <div class="photo photo_center photo_front "  id="photo_{{index}}" onclick="flip(this)">
+        <!-- .photo_wrap负责翻转-->
+        <div class="photo_wrap">
+            <div class="side side-front">
+                <p class="image"><img src="{{img}}" alt="asd"></p>
+                <p class="caption">{{caption}}</p>
+            </div>
+            <div class="side side-back">
+                <p class="desc">{{desc}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="data.js"></script>
+<script>
+    function g(selector){
+        var method = selector.substr(0,1) == "." ? "getElementsByClassName":"getElementById";
+        return document[method](selector.substr(1));
+    }
+
+    var mydata = data;
+    function addPhotos(){
+        var template = g("#wrap").innerHTML;
+        var html = [];
+        for( var s in mydata){
+            var _html = template
+                    .replace('{{index}}',s)
+                    .replace('{{img}}',mydata[s].img)
+                    .replace('{{caption}}',mydata[s].caption)
+                    .replace('{{desc}}',mydata[s].desc);
+            html.push(_html);
+        }
+        g("#wrap").innerHTML = html.join(" ");
+    }
+    addPhotos();
+
+    function flip(elem){
+        var str = elem.className;
+        var pattern = /photo_front/;
+        if(pattern.test(str)){
+            elem.className = str.replace(pattern,"photo_back");
+        }else {
+            elem.className = str.replace(/photo_back/,"photo_front");
+        }
+    }
+</script>
+
+</body>
+</html>
