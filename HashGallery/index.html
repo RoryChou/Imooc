@@ -92,6 +92,31 @@
         .photo_back .photo_wrap{
             transform: rotateY(180deg);
         }
+        /*控制按钮的样式*/
+        .nav{
+            width: 80%;
+            height: 30px;
+            line-height: 30px;
+            position: absolute;
+            left: 10%;
+            bottom: 20px;
+            z-index: 999;
+            background-color: #ffffff;
+            text-align: center;
+        }
+        /*普通样式*/
+        .nav .i{
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            cursor: pointer;
+            background-color: #aaaaaa;
+            border-radius: 50%;
+        }
+        /*当前选中样式*/
+        .nav .i_current{}
+        /*背面样式*/
+        .nav .i_back{}
     </style>
 </head>
 <body onselectstart="return false;">
@@ -131,15 +156,22 @@
     function addPhotos(){
         var template = g("#wrap").innerHTML;
         var html = [];
+        var nav = [];
+
+        //7. 输出控制按钮，每一个控制按钮，对应一个海报。
         for( var s = 0;s<mydata.length;s++){
             var _html = template
                     .replace('{{index}}', s)
                     .replace('{{img}}',mydata[s].img)
                     .replace('{{caption}}',mydata[s].caption)
                     .replace('{{desc}}',mydata[s].desc);
+            // 因为replace方法返回一个替换之后的新字符串，所以可以链式调用。
             html.push(_html);
+            nav.push("<span id='nav_"+s+"' onclick='flip( g(\"#photo_"+s+"\") )' class='i'>&nbsp;</span>")
+//            nav.push('<span id="nav_'+s+'" onclick="flip(g(\'#photo_'+s+'\'))" class="i">&nbsp;</span>')
         }
-        g("#wrap").innerHTML = html.join(" ");
+        html.push('<div class="nav">'+nav.join(' ')+'</div>')
+        g("#wrap").innerHTML = html.join(" ");//将html数组内的元素以空格分隔放入一个字符串
         rsort(random([0,mydata.length]));
     }
     addPhotos();
