@@ -227,6 +227,12 @@
             photor.style.top = random(ranges.right.y) +"px";
 
         }
+        var navs = g(".i") ;
+        for(var s = 0;s<navs.length;s++){
+            navs[s].className = navs[s].className.replace(/\s*i_current\s*/,"");
+            navs[s].className = navs[s].className.replace(/\s*i_back\s*/,"");
+        }
+        g("#nav_"+n).className += " i_current ";
         console.log(random(ranges.left.x));
     }
 
