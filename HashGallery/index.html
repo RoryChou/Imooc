@@ -112,11 +112,22 @@
             cursor: pointer;
             background-color: #aaaaaa;
             border-radius: 50%;
+            -webkit-transform: scale(.48);
+        }
+        .nav .i:after{
+            
         }
         /*当前选中样式*/
-        .nav .i_current{}
+        .nav .i_current{
+            -webkit-transform: scale(1);
+            background: url(arrow.PNG) no-repeat;
+            /*background-color: brown;*/
+        }
         /*背面样式*/
-        .nav .i_back{}
+        .nav .i_back{
+            /*background-color: aqua;*/
+            transform: rotateY(-180deg);
+        }
     </style>
 </head>
 <body onselectstart="return false;">
@@ -167,10 +178,10 @@
                     .replace('{{desc}}',mydata[s].desc);
             // 因为replace方法返回一个替换之后的新字符串，所以可以链式调用。
             html.push(_html);
-            nav.push("<span id='nav_"+s+"' onclick='flip( g(\"#photo_"+s+"\") )' class='i'>&nbsp;</span>")
-//            nav.push('<span id="nav_'+s+'" onclick="flip(g(\'#photo_'+s+'\'))" class="i">&nbsp;</span>')
+            nav.push("<span id='nav_"+s+"' onclick='flip( g(\"#photo_"+s+"\") )' class='i'>&nbsp;</span>");
+            //nav.push('<span id="nav_'+s+'" onclick="flip(g(\'#photo_'+s+'\'))" class="i">&nbsp;</span>')
         }
-        html.push('<div class="nav">'+nav.join(' ')+'</div>')
+        html.push('<div class="nav">'+nav.join(' ')+'</div>');
         g("#wrap").innerHTML = html.join(" ");//将html数组内的元素以空格分隔放入一个字符串
         rsort(random([0,mydata.length]));
     }
@@ -239,11 +250,14 @@
     // 1.翻面控制
     function flip(elem){
         var str = elem.className;
+        var n = elem.id.split("_")[1];
         var pattern = /photo_front/;
         if(pattern.test(str)){
             elem.className = str.replace(pattern,"photo_back");
+            g("#nav_"+n).className += " i_back ";
         }else {
             elem.className = str.replace(/photo_back/,"photo_front");
+            g("#nav_"+n).className = g("#nav_"+n).className.replace(/\s*i_back\s*/,"");
         }
     }
 </script>
